@@ -3,8 +3,18 @@ const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const authRouter = require("./routes/authRoutes");
 const userRouter = require("./routes/userRoutes");
+const cors = require('cors');
 
 app = express();
+
+app.use(cors());
+
+/*const corsOptions = {
+  origin: 'http://localhost:3000',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+  optionsSuccessStatus: 204
+};*/
 
 dotenv.config();
 
