@@ -1,4 +1,5 @@
 const Users = require("../models/userModel");
+const bcrypt = require("bcrypt");
 
 //GET ALL INFORMATION FROM DATABASE
 
@@ -60,6 +61,32 @@ const editUser = async (req, res) => {
   }
 };
 
+//RESET PASSWORD
+const resetPassword = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    const updatedPassword = await Users.findOneAndUpdate(
+      { email },
+      { password: hashedPassword },
+      { new: true }
+    );
+
+    if (!updatedPassword) {
+      return res.status(404).json({ message: "Account not find" });
+    }
+
+    return res.status(200).json({
+      message: "Successful",
+      user: updatedPassword,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 //DELETE INFORMATION
 
 const deleteUser = async (req, res) => {
@@ -74,11 +101,10 @@ const deleteUser = async (req, res) => {
 
 //FUND WALLET
 
-//RESET PASSWORD
-
 module.exports = {
   getUsers,
   getUser,
   editUser,
   deleteUser,
+  resetPassword,
 };
